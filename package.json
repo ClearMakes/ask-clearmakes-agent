@@ -1,0 +1,9 @@
+{
+  "name": "ask-clearmakes-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Action: ask a ClearMakes Agents assistant a question.",
+  "main": "index.js",
+  "scripts": { "test": "node --test" },
+  "license": "MIT"
+}

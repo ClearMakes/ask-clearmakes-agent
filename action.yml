@@ -1,0 +1,35 @@
+name: Ask ClearMakes Agent
+description: Ask your ClearMakes Agents assistant a question and get an answer grounded in your own docs, site and apps.
+author: ClearMakes
+branding:
+  icon: message-circle
+  color: orange
+inputs:
+  api-key:
+    description: An agent API key from ClearMakes Agents (Agent > Sources > API keys). Store it as a repository secret.
+    required: true
+  question:
+    description: The question to ask, for example an issue's title and body.
+    required: true
+  api-base-url:
+    description: Only change this for a self-hosted ClearMakes Agents.
+    required: false
+    default: https://agents.clearmakes.com
+  top-k:
+    description: How many passages the agent reads before it answers (1 to 20).
+    required: false
+    default: "6"
+  fail-on-error:
+    description: Fail the step when the agent cannot answer. Set to "false" to carry on with an empty answer.
+    required: false
+    default: "true"
+outputs:
+  answer:
+    description: The agent's answer, as Markdown.
+  sources:
+    description: The passages the answer came from, as a JSON array of {document_id, filename, section}.
+  agent-name:
+    description: The name of the agent that answered.
+runs:
+  using: node24
+  main: index.js

@@ -1,0 +1,33 @@
+# Copy to .github/workflows/answer-new-issues.yml in your repository.
+# Add your agent API key as a repository secret named CLEARMAKES_AGENT_KEY
+# (ClearMakes Agents: open the agent, Sources, API keys).
+name: Answer new issues from our docs
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  answer:
+    runs-on: ubuntu-latest
+    steps:
+      - id: agent
+        uses: ClearMakes/ask-clearmakes-agent@v1
+        with:
+          api-key: ${{ secrets.CLEARMAKES_AGENT_KEY }}
+          question: |
+            ${{ github.event.issue.title }}
+
+            ${{ github.event.issue.body }}
+          fail-on-error: "false"
+
+      - if: steps.agent.outputs.answer != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ANSWER: ${{ steps.agent.outputs.answer }}
+        run: |
+          printf '%s\n\n_Answered from our docs by ClearMakes Agents. A person will follow up if this does not help._\n' "$ANSWER" > reply.md
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body-file reply.md
